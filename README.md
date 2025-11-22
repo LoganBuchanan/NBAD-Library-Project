@@ -1,2 +1,3 @@
-# NBAD-Library-Project
-Network-based Application Development Final Project - Library Management System
+# Final Project Template
+
+This repository provides the **folder structure** for your team’s final project. All implementation is left to students.
