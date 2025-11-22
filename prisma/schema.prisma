@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  LIBRARIAN
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          UserRole @default(CUSTOMER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  loans Loan[]
+
+  @@map("users")
+}
+
+model Author {
+  id        String   @id @default(cuid())
+  name      String
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookAuthors BookAuthor[]
+
+  @@map("authors")
+}
+
+model Book {
+  id               String   @id @default(cuid())
+  title            String
+  isbn             String   @unique
+  published_year   Int
+  available_copies Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  bookAuthors BookAuthor[]
+  loans       Loan[]
+
+  @@map("books")
+}
+
+model BookAuthor {
+  book_id   String
+  author_id String
+
+  // Relations
+  book   Book   @relation(fields: [book_id], references: [id], onDelete: Cascade)
+  author Author @relation(fields: [author_id], references: [id], onDelete: Cascade)
+
+  @@id([book_id, author_id])
+  @@map("book_authors")
+}
+
+model Loan {
+  id          String    @id @default(cuid())
+  user_id     String
+  book_id     String
+  borrowed_at DateTime  @default(now())
+  due_at      DateTime
+  returned_at DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [book_id], references: [id], onDelete: Cascade)
+
+  @@map("loans")
+}
