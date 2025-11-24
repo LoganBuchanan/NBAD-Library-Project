@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Testing - Library Management System</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <style>
+      .endpoint-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+      }
+      .endpoint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .method {
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+      .method-get {
+        background: #10b981;
+        color: white;
+      }
+      .method-post {
+        background: #3b82f6;
+        color: white;
+      }
+      .method-put {
+        background: #f59e0b;
+        color: white;
+      }
+      .method-delete {
+        background: #ef4444;
+        color: white;
+      }
+      .auth-required {
+        background: #fef3c7;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+      .endpoint-url {
+        font-family: monospace;
+        background: #f1f5f9;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin: 10px 0;
+        word-break: break-all;
+      }
+      .test-btn {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .test-btn:hover {
+        background: #1d4ed8;
+      }
+      .response-box {
+        background: #1e293b;
+        color: #10b981;
+        padding: 15px;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+      }
+      .section-title {
+        background: #f8fafc;
+        padding: 15px 20px;
+        margin: 30px 0 20px 0;
+        border-left: 4px solid #2563eb;
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>API Testing Dashboard</h1>
+        <p class="subtitle">Library Management System REST API v1.0.0</p>
+        <p><strong>Base URL:</strong> <code>http://localhost:3000/api</code></p>
+      </header>
+
+      <main>
+        <!-- Health Check -->
+        <div class="section-title">Health Check</div>
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/health</strong>
+            </div>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/health</div>
+          <p>Check if the API is running</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/health', null, 'health-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="health-response" class="response-box"></pre>
+        </div>
+
+        <!-- Users Endpoints -->
+        <div class="section-title">Users</div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-post">POST</span>
+              <strong>/api/users/signup</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/users/signup</div>
+          <p>Register a new user</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('POST', '/api/users/signup', {name: 'Test User', email: 'test@example.com', password: 'password123', role: 'CUSTOMER'}, 'signup-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="signup-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-post">POST</span>
+              <strong>/api/users/login</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/users/login</div>
+          <p>Login with credentials</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('POST', '/api/users/login', {email: 'admin@library.com', password: 'admin123'}, 'login-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="login-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/users</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/users</div>
+          <p>Get all users</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/users', null, 'users-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="users-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/users/profile</strong>
+            </div>
+            <span class="auth-required">Auth Required</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/users/profile
+          </div>
+          <p>Get current user profile</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/users/profile', null, 'profile-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="profile-response" class="response-box"></pre>
+        </div>
+
+        <!-- Books Endpoints -->
+        <div class="section-title">Books</div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/books</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/books</div>
+          <p>Get all books</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/books', null, 'books-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="books-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/books?search=gatsby</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/books?search=gatsby
+          </div>
+          <p>Search books by title or ISBN</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/books?search=gatsby', null, 'books-search-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="books-search-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/books?available=true</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/books?available=true
+          </div>
+          <p>Get only available books</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/books?available=true', null, 'books-available-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="books-available-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-post">POST</span>
+              <strong>/api/books</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/books</div>
+          <p>Create a new book (requires author IDs)</p>
+          <button
+            class="test-btn"
+            onclick="alert('Use Postman to create books - requires valid author IDs')"
+          >
+            Use Postman
+          </button>
+        </div>
+
+        <!-- Authors Endpoints -->
+        <div class="section-title">Authors</div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/authors</strong>
+            </div>
+            <span class="auth-required">Public</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/authors</div>
+          <p>Get all authors</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/authors', null, 'authors-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="authors-response" class="response-box"></pre>
+        </div>
+
+        <!-- Loans Endpoints -->
+        <div class="section-title">Loans</div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/loans</strong>
+            </div>
+            <span class="auth-required">Auth Required</span>
+          </div>
+          <div class="endpoint-url">http://localhost:3000/api/loans</div>
+          <p>Get loans (customers see their own, librarians see all)</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/loans', null, 'loans-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="loans-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/loans?status=active</strong>
+            </div>
+            <span class="auth-required">Auth Required</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/loans?status=active
+          </div>
+          <p>Get only active loans</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/loans?status=active', null, 'loans-active-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="loans-active-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/loans?overdue=true</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/loans?overdue=true
+          </div>
+          <p>Get overdue loans</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/loans?overdue=true', null, 'loans-overdue-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="loans-overdue-response" class="response-box"></pre>
+        </div>
+
+        <!-- Statistics Endpoints -->
+        <div class="section-title">Statistics (Librarian Only)</div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/books/admin/stats</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/books/admin/stats
+          </div>
+          <p>Get book statistics</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/books/admin/stats', null, 'book-stats-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="book-stats-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/authors/admin/stats</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/authors/admin/stats
+          </div>
+          <p>Get author statistics</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/authors/admin/stats', null, 'author-stats-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="author-stats-response" class="response-box"></pre>
+        </div>
+
+        <div class="endpoint-card">
+          <div class="endpoint-header">
+            <div>
+              <span class="method method-get">GET</span>
+              <strong>/api/loans/admin/stats</strong>
+            </div>
+            <span class="auth-required">Librarian Only</span>
+          </div>
+          <div class="endpoint-url">
+            http://localhost:3000/api/loans/admin/stats
+          </div>
+          <p>Get loan statistics</p>
+          <button
+            class="test-btn"
+            onclick="testEndpoint('GET', '/api/loans/admin/stats', null, 'loan-stats-response')"
+          >
+            Test Endpoint
+          </button>
+          <pre id="loan-stats-response" class="response-box"></pre>
+        </div>
+
+        <!-- Documentation Links -->
+        <div class="section-title">Additional Resources</div>
+        <div class="card">
+          <h3>Testing Tools</h3>
+          <ul style="line-height: 2">
+            <li><a href="/health" target="_blank">View Health Check</a></li>
+            <li><a href="/api/books" target="_blank">View Books JSON</a></li>
+            <li>
+              <a href="/api/authors" target="_blank">View Authors JSON</a>
+            </li>
+            <li>
+              <strong>Use Postman for:</strong> POST, PUT, DELETE requests with
+              authentication
+            </li>
+          </ul>
+        </div>
+      </main>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script>
+      async function testEndpoint(method, url, body, responseId) {
+        const responseBox = document.getElementById(responseId);
+        responseBox.style.display = 'block';
+        responseBox.textContent = 'Loading...';
+
+        try {
+          const headers = {
+            'Content-Type': 'application/json',
+          };
+
+          // Add authentication token if user is logged in
+          const token = localStorage.getItem('library_token');
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
+
+          const options = {
+            method: method,
+            headers: headers,
+          };
+
+          if (body) {
+            options.body = JSON.stringify(body);
+          }
+
+          const response = await fetch(url, options);
+          const data = await response.json();
+
+          responseBox.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          responseBox.textContent = `Error: ${error.message}`;
+        }
+      }
+
+      // Display login status
+      window.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('library_token');
+        const user = localStorage.getItem('library_user');
+
+        if (token && user) {
+          const userData = JSON.parse(user);
+          const statusDiv = document.createElement('div');
+          statusDiv.style.cssText =
+            'background: #dcfce7; padding: 10px; border-radius: 6px; margin-bottom: 20px; text-align: center;';
+          statusDiv.innerHTML = `<strong>Logged in as:</strong> ${userData.name} (${userData.role})`;
+          document.querySelector('main').prepend(statusDiv);
+        } else {
+          const statusDiv = document.createElement('div');
+          statusDiv.style.cssText =
+            'background: #fee2e2; padding: 10px; border-radius: 6px; margin-bottom: 20px; text-align: center;';
+          statusDiv.innerHTML =
+            '<strong>Not logged in.</strong> Login at <a href="/">http://localhost:3000</a> to test authenticated endpoints.';
+          document.querySelector('main').prepend(statusDiv);
+        }
+      });
+    </script>
+  </body>
+</html>

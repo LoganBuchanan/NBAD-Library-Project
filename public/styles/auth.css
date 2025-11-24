@@ -1,0 +1,77 @@
+/* Authentication Pages Styles */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 20px;
+}
+
+.auth-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 450px;
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  font-size: 1.8rem;
+}
+
+.auth-card form {
+  margin-bottom: 20px;
+}
+
+.auth-card .form-group {
+  margin-bottom: 20px;
+}
+
+.auth-card button[type='submit'] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.auth-toggle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.auth-toggle a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-toggle a:hover {
+  text-decoration: underline;
+}
+
+.auth-card .error-message {
+  display: none;
+  background-color: #fee2e2;
+  color: var(--danger-color);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .auth-card {
+    padding: 30px 20px;
+  }
+
+  .auth-card h2 {
+    font-size: 1.5rem;
+  }
+}

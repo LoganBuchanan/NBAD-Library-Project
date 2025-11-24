@@ -1,0 +1,253 @@
+/* Dashboard Specific Styles */
+
+/* Search Container */
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Loan Cards */
+.loan-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.loan-card.overdue {
+  border-left: 4px solid var(--danger-color);
+  background-color: #fef2f2;
+}
+
+.loan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.loan-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.loan-dates {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: var(--bg-color);
+  border-radius: 6px;
+}
+
+.loan-dates p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* Book Cards */
+.book-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.book-card h3 {
+  margin-bottom: 10px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.book-info {
+  margin: 15px 0;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.badge-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.badge-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+/* Data Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: var(--bg-color);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.data-table tr:hover {
+  background-color: var(--bg-color);
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-info {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 10px 0;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+/* Profile Page Styles */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--bg-color);
+  border-radius: 6px;
+}
+
+.profile-field label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 150px;
+  margin: 0;
+}
+
+.profile-field span {
+  color: var(--text-secondary);
+}
+
+.profile-field .role-badge {
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .loan-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .data-table {
+    font-size: 0.85rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px;
+  }
+}

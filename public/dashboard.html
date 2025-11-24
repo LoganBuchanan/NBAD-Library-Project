@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Dashboard - Library Management</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation -->
+      <nav class="nav">
+        <div class="nav-links">
+          <a href="/dashboard.html">Dashboard</a>
+          <a href="/books.html">Browse Books</a>
+          <a href="/profile.html">Profile</a>
+        </div>
+        <div class="user-info">
+          <span class="user-name" id="userName"></span>
+          <span class="role-badge" id="userRole"></span>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="authHelpers.logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+
+      <!-- Header -->
+      <header class="header">
+        <h1>My Dashboard</h1>
+        <p class="subtitle">Manage your borrowed books</p>
+      </header>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Active Loans Section -->
+        <section class="card">
+          <h2>Active Loans (<span id="activeLoanCount">0</span>/5)</h2>
+          <div id="activeLoansContainer">
+            <div class="loading">Loading your active loans...</div>
+          </div>
+        </section>
+
+        <!-- Browse Books Section -->
+        <section class="card">
+          <h2>Browse Available Books</h2>
+
+          <!-- Search Bar -->
+          <div class="search-container">
+            <input
+              type="text"
+              id="bookSearch"
+              placeholder="Search books by title or ISBN..."
+              class="search-input"
+            />
+            <button class="btn btn-primary" onclick="searchBooks()">
+              Search
+            </button>
+            <button class="btn btn-secondary" onclick="clearSearch()">
+              Clear
+            </button>
+          </div>
+
+          <!-- Books Grid -->
+          <div id="booksContainer" class="grid grid-3">
+            <div class="loading">Loading available books...</div>
+          </div>
+
+          <!-- Pagination -->
+          <div id="booksPagination" class="pagination"></div>
+        </section>
+
+        <!-- Loan History Section -->
+        <section class="card">
+          <h2>Loan History</h2>
+          <div id="loanHistoryContainer">
+            <div class="loading">Loading your loan history...</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/dashboard.js"></script>
+  </body>
+</html>

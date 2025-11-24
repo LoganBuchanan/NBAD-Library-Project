@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile - Library Management</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation -->
+      <nav class="nav">
+        <div class="nav-links" id="navLinks">
+          <a href="/dashboard.html">Dashboard</a>
+          <a href="/books.html">Browse Books</a>
+          <a href="/profile.html">Profile</a>
+        </div>
+        <div class="user-info">
+          <span class="user-name" id="userName"></span>
+          <span class="role-badge" id="userRole"></span>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="authHelpers.logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+
+      <!-- Header -->
+      <header class="header">
+        <h1>My Profile</h1>
+        <p class="subtitle">Manage your account information</p>
+      </header>
+
+      <main>
+        <!-- Profile Information Card -->
+        <section class="card">
+          <h2>Profile Information</h2>
+          <div id="profileInfo" class="profile-info">
+            <div class="loading">Loading profile...</div>
+          </div>
+          <button class="btn btn-primary" onclick="showEditProfileForm()">
+            Edit Profile
+          </button>
+        </section>
+
+        <!-- Edit Profile Form -->
+        <section class="card hidden" id="editProfileSection">
+          <h2>Edit Profile</h2>
+          <form id="editProfileForm">
+            <div class="form-group">
+              <label for="editName">Full Name *</label>
+              <input type="text" id="editName" required />
+            </div>
+            <div class="form-group">
+              <label for="editEmail">Email *</label>
+              <input type="email" id="editEmail" required />
+            </div>
+            <div id="editProfileError" class="error-message"></div>
+            <div id="editProfileSuccess" class="success-message"></div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="hideEditProfileForm()"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Change Password Card -->
+        <section class="card">
+          <h2>Change Password</h2>
+          <button class="btn btn-primary" onclick="showChangePasswordForm()">
+            Change Password
+          </button>
+        </section>
+
+        <!-- Change Password Form -->
+        <section class="card hidden" id="changePasswordSection">
+          <h2>Change Your Password</h2>
+          <form id="changePasswordForm">
+            <div class="form-group">
+              <label for="currentPassword">Current Password *</label>
+              <input type="password" id="currentPassword" required />
+            </div>
+            <div class="form-group">
+              <label for="newPassword">New Password *</label>
+              <input type="password" id="newPassword" required minlength="6" />
+              <small class="text-muted">Must be at least 6 characters</small>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm New Password *</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                required
+                minlength="6"
+              />
+            </div>
+            <div id="changePasswordError" class="error-message"></div>
+            <div id="changePasswordSuccess" class="success-message"></div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                Update Password
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="hideChangePasswordForm()"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Account Statistics (for customers) -->
+        <section class="card" id="statsSection">
+          <h2>My Statistics</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number" id="totalLoansCount">0</div>
+              <div class="stat-label">Total Books Borrowed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="activeLoansCount">0</div>
+              <div class="stat-label">Currently Borrowed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="returnedLoansCount">0</div>
+              <div class="stat-label">Books Returned</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/profile.js"></script>
+  </body>
+</html>

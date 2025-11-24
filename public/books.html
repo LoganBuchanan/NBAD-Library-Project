@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Books - Library Management</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/books.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navigation -->
+      <nav class="nav">
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/books.html">Browse Books</a>
+          <a href="/profile.html" id="profileLink" class="hidden">Profile</a>
+        </div>
+        <div class="user-info" id="navUserInfo">
+          <a href="/" class="btn btn-primary btn-sm">Login</a>
+        </div>
+      </nav>
+
+      <!-- Header -->
+      <header class="header">
+        <h1>Browse Our Collection</h1>
+        <p class="subtitle">Explore thousands of books in our library</p>
+      </header>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Search and Filters -->
+        <section class="card">
+          <div class="search-container">
+            <input
+              type="text"
+              id="bookSearch"
+              placeholder="Search by title or ISBN..."
+              class="search-input"
+            />
+            <button class="btn btn-primary" onclick="searchBooks()">
+              Search
+            </button>
+            <button class="btn btn-secondary" onclick="clearSearch()">
+              Clear
+            </button>
+          </div>
+
+          <div class="filter-container">
+            <label>
+              <input
+                type="radio"
+                name="availability"
+                value="all"
+                checked
+                onchange="filterBooks()"
+              />
+              All Books
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="availability"
+                value="available"
+                onchange="filterBooks()"
+              />
+              Available Only
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="availability"
+                value="unavailable"
+                onchange="filterBooks()"
+              />
+              Unavailable
+            </label>
+          </div>
+        </section>
+
+        <!-- Books Grid -->
+        <section class="card">
+          <h2>Books (<span id="bookCount">0</span>)</h2>
+          <div id="booksContainer" class="grid grid-3">
+            <div class="loading">Loading books...</div>
+          </div>
+
+          <!-- Pagination -->
+          <div id="booksPagination" class="pagination"></div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Library Management System v1.0.0</p>
+        <p>
+          <a href="/">Home</a> |
+          <a href="/books.html">Browse Books</a>
+        </p>
+      </footer>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/books.js"></script>
+  </body>
+</html>

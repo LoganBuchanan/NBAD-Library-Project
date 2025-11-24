@@ -12,7 +12,15 @@
     "db:studio": "prisma studio",
     "db:seed": "node src/scripts/seed.js"
   },
-  "keywords": ["library", "management", "api", "express", "prisma", "jwt", "bcrypt"],
+  "keywords": [
+    "library",
+    "management",
+    "api",
+    "express",
+    "prisma",
+    "jwt",
+    "bcrypt"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "devDependencies": {

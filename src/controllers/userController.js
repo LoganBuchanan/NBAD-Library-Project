@@ -6,11 +6,9 @@ const prisma = new PrismaClient();
 
 // Generate JWT token
 const generateToken = (userId) => {
-  return jwt.sign(
-    { userId },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
-  );
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || '15m',
+  });
 };
 
 // User signup
@@ -20,25 +18,25 @@ const signup = async (req, res) => {
 
     // Validation
     if (!name || !email || !password) {
-      return res.status(400).json({ 
-        error: 'Name, email, and password are required' 
+      return res.status(400).json({
+        error: 'Name, email, and password are required',
       });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ 
-        error: 'Password must be at least 6 characters long' 
+      return res.status(400).json({
+        error: 'Password must be at least 6 characters long',
       });
     }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (existingUser) {
-      return res.status(409).json({ 
-        error: 'User with this email already exists' 
+      return res.status(409).json({
+        error: 'User with this email already exists',
       });
     }
 
@@ -52,15 +50,15 @@ const signup = async (req, res) => {
         name,
         email,
         password_hash,
-        role: role || 'CUSTOMER' // Default to customer
+        role: role || 'CUSTOMER', // Default to customer
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        createdAt: true
-      }
+        createdAt: true,
+      },
     });
 
     // Generate token
@@ -69,7 +67,7 @@ const signup = async (req, res) => {
     res.status(201).json({
       message: 'User created successfully',
       user,
-      token
+      token,
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -84,19 +82,19 @@ const login = async (req, res) => {
 
     // Validation
     if (!email || !password) {
-      return res.status(400).json({ 
-        error: 'Email and password are required' 
+      return res.status(400).json({
+        error: 'Email and password are required',
       });
     }
 
     // Find user
     const user = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!user) {
-      return res.status(401).json({ 
-        error: 'Invalid email or password' 
+      return res.status(401).json({
+        error: 'Invalid email or password',
       });
     }
 
@@ -104,8 +102,8 @@ const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      return res.status(401).json({ 
-        error: 'Invalid email or password' 
+      return res.status(401).json({
+        error: 'Invalid email or password',
       });
     }
 
@@ -118,9 +116,9 @@ const login = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
       },
-      token
+      token,
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -139,8 +137,8 @@ const getProfile = async (req, res) => {
         email: true,
         role: true,
         createdAt: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     });
 
     res.json(user);
@@ -161,13 +159,13 @@ const updateProfile = async (req, res) => {
       const existingUser = await prisma.user.findFirst({
         where: {
           email,
-          NOT: { id: userId }
-        }
+          NOT: { id: userId },
+        },
       });
 
       if (existingUser) {
-        return res.status(409).json({ 
-          error: 'Email already in use by another user' 
+        return res.status(409).json({
+          error: 'Email already in use by another user',
         });
       }
     }
@@ -176,20 +174,20 @@ const updateProfile = async (req, res) => {
       where: { id: userId },
       data: {
         ...(name && { name }),
-        ...(email && { email })
+        ...(email && { email }),
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     });
 
     res.json({
       message: 'Profile updated successfully',
-      user: updatedUser
+      user: updatedUser,
     });
   } catch (error) {
     console.error('Update profile error:', error);
@@ -204,28 +202,31 @@ const changePassword = async (req, res) => {
     const userId = req.user.id;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ 
-        error: 'Current password and new password are required' 
+      return res.status(400).json({
+        error: 'Current password and new password are required',
       });
     }
 
     if (newPassword.length < 6) {
-      return res.status(400).json({ 
-        error: 'New password must be at least 6 characters long' 
+      return res.status(400).json({
+        error: 'New password must be at least 6 characters long',
       });
     }
 
     // Get current user with password
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     // Verify current password
-    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password_hash
+    );
 
     if (!isCurrentPasswordValid) {
-      return res.status(401).json({ 
-        error: 'Current password is incorrect' 
+      return res.status(401).json({
+        error: 'Current password is incorrect',
       });
     }
 
@@ -236,7 +237,7 @@ const changePassword = async (req, res) => {
     // Update password
     await prisma.user.update({
       where: { id: userId },
-      data: { password_hash: newPasswordHash }
+      data: { password_hash: newPasswordHash },
     });
 
     res.json({ message: 'Password changed successfully' });
@@ -264,14 +265,14 @@ const getAllUsers = async (req, res) => {
           role: true,
           createdAt: true,
           _count: {
-            loans: true
-          }
+            select: { loans: true },
+          },
         },
         skip: parseInt(skip),
         take: parseInt(limit),
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       }),
-      prisma.user.count({ where })
+      prisma.user.count({ where }),
     ]);
 
     res.json({
@@ -280,8 +281,8 @@ const getAllUsers = async (req, res) => {
         total,
         pages: Math.ceil(total / limit),
         currentPage: parseInt(page),
-        limit: parseInt(limit)
-      }
+        limit: parseInt(limit),
+      },
     });
   } catch (error) {
     console.error('Get all users error:', error);
@@ -298,18 +299,18 @@ const deleteUser = async (req, res) => {
     const activeLoans = await prisma.loan.count({
       where: {
         user_id: id,
-        returned_at: null
-      }
+        returned_at: null,
+      },
     });
 
     if (activeLoans > 0) {
-      return res.status(400).json({ 
-        error: 'Cannot delete user with active loans' 
+      return res.status(400).json({
+        error: 'Cannot delete user with active loans',
       });
     }
 
     await prisma.user.delete({
-      where: { id }
+      where: { id },
     });
 
     res.json({ message: 'User deleted successfully' });
@@ -329,5 +330,5 @@ module.exports = {
   updateProfile,
   changePassword,
   getAllUsers,
-  deleteUser
+  deleteUser,
 };
