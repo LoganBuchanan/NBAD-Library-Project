@@ -1,108 +1,102 @@
-# Library Management System API
+# Library Management API
 
-A comprehensive library management system with user authentication and full CRUD operations.
+Simple REST API for managing library books, users, and loans. Built for small to medium libraries who need basic digital management.
 
-## 🚀 Quick Start
+## Getting Started
 
-1. **Start the server:**
-   ```bash
-   npm run dev
-   ```
+First things first - let's get this thing running:
 
-2. **Seed the database:**
-   ```bash
-   npm run db:seed
-   ```
-
-3. **API is available at:** `http://localhost:3000`
-
-## 🔐 Authentication
-
-### Test Credentials
-- **Librarian:** `librarian@library.com` / `password123`
-- **Customer 1:** `john@example.com` / `password123`
-- **Customer 2:** `sarah@example.com` / `password123`
-
-### JWT Token Usage
-Include the JWT token in the Authorization header:
-```
-Authorization: Bearer <your-jwt-token>
+```bash
+npm run dev        # Starts the server on port 3000
+npm run db:seed    # Loads some sample data to play with
 ```
 
-## 📋 API Endpoints
+Your API will be live at `http://localhost:3000`
 
-### Authentication Endpoints
+## Authentication
 
-#### POST /api/users/signup
-Create a new user account.
+You'll need to log in to do most things. Here are some accounts already set up for testing:
+
+**Librarian Account:** `librarian@library.com` with password `password123`
+**Regular User:** `john@example.com` with password `password123`
+**Another User:** `sarah@example.com` with password `password123`
+
+Once you log in, you'll get a token. Just stick it in your requests like this:
+```
+Authorization: Bearer your-token-here
+```
+
+## What You Can Do
+
+### User Accounts
+
+**Sign Up** - `POST /api/users/signup`
+Create a new account. Pretty straightforward:
 ```json
 {
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "role": "CUSTOMER" // optional, defaults to CUSTOMER
+  "name": "Your Name",
+  "email": "you@email.com",
+  "password": "your-password",
+  "role": "CUSTOMER"
+}
+```
+Role can be "CUSTOMER" or "LIBRARIAN" - but only existing librarians can create new librarian accounts.
+
+**Log In** - `POST /api/users/login`
+Get your access token:
+```json
+{
+  "email": "you@email.com",
+  "password": "your-password"
 }
 ```
 
-#### POST /api/users/login
-Login and receive JWT token.
+**Your Profile** - `GET /api/users/profile`
+See your account info (login required).
+
+**Update Profile** - `PUT /api/users/profile`
+Change your name or email (login required):
 ```json
 {
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-### User Management
-
-#### GET /api/users/profile
-Get current user profile (requires authentication).
-
-#### PUT /api/users/profile
-Update current user profile (requires authentication).
-```json
-{
-  "name": "Updated Name",
+  "name": "New Name",
   "email": "newemail@example.com"
 }
 ```
 
-#### PUT /api/users/change-password
-Change user password (requires authentication).
+**Change Password** - `PUT /api/users/change-password`
+Update your password (login required):
 ```json
 {
-  "currentPassword": "oldpassword",
-  "newPassword": "newpassword"
+  "currentPassword": "old-password",
+  "newPassword": "new-password"
 }
 ```
 
-#### GET /api/users
-Get all users (librarians only).
-Query params: `page`, `limit`, `role`
+### For Librarians Only
 
-#### DELETE /api/users/:id
-Delete a user (librarians only).
+**All Users** - `GET /api/users`
+See everyone who's signed up. Add `?page=2&limit=10&role=CUSTOMER` to filter.
 
-### Author Management
+**Remove User** - `DELETE /api/users/:id`
+Delete someone's account.
 
-#### GET /api/authors
-Get all authors (public access).
-Query params: `page`, `limit`, `search`
+### Authors
 
-#### GET /api/authors/:id
-Get author by ID with their books (public access).
+**Browse Authors** - `GET /api/authors`
+See all authors in the system. No login needed. Use `?search=tolkien` to find specific ones.
 
-#### POST /api/authors
-Create new author (librarians only).
+**Author Details** - `GET /api/authors/:id`
+Get info about a specific author and their books.
+
+**Add Author** - `POST /api/authors` (librarians only)
 ```json
 {
-  "name": "Author Name",
-  "bio": "Author biography"
+  "name": "J.R.R. Tolkien",
+  "bio": "British author and philologist..."
 }
 ```
 
-#### PUT /api/authors/:id
-Update author (librarians only).
+**Update Author** - `PUT /api/authors/:id` (librarians only)
 ```json
 {
   "name": "Updated Name",
@@ -110,204 +104,166 @@ Update author (librarians only).
 }
 ```
 
-#### DELETE /api/authors/:id
-Delete author (librarians only).
+**Remove Author** - `DELETE /api/authors/:id` (librarians only)
 
-#### GET /api/authors/admin/stats
-Get author statistics (librarians only).
+### Books
 
-### Book Management
+**Browse Books** - `GET /api/books`
+See all books. Add filters: `?search=hobbit&author=tolkien&available=true`
 
-#### GET /api/books
-Get all books (public access).
-Query params: `page`, `limit`, `search`, `author`, `available`
+**Book Details** - `GET /api/books/:id`
+Get full info about a specific book.
 
-#### GET /api/books/:id
-Get book by ID with authors and current loans (public access).
-
-#### POST /api/books
-Create new book (librarians only).
+**Add Book** - `POST /api/books` (librarians only)
 ```json
 {
-  "title": "Book Title",
-  "isbn": "9781234567890",
-  "published_year": 2023,
-  "available_copies": 5,
-  "authorIds": ["author-id-1", "author-id-2"]
+  "title": "The Hobbit",
+  "isbn": "9780547928227",
+  "published_year": 1937,
+  "available_copies": 3,
+  "authorIds": ["author-id-goes-here"]
 }
 ```
 
-#### PUT /api/books/:id
-Update book (librarians only).
+**Update Book** - `PUT /api/books/:id` (librarians only)
 ```json
 {
   "title": "Updated Title",
-  "available_copies": 3,
-  "authorIds": ["author-id-1"]
+  "available_copies": 2
 }
 ```
 
-#### DELETE /api/books/:id
-Delete book (librarians only).
+**Remove Book** - `DELETE /api/books/:id` (librarians only)
 
-#### GET /api/books/admin/stats
-Get book statistics (librarians only).
+### Borrowing Books
 
-### Loan Management
-
-#### POST /api/loans
-Borrow a book (authenticated users).
+**Check Out a Book** - `POST /api/loans`
+Borrow a book (need to be logged in):
 ```json
 {
-  "book_id": "book-id",
-  "user_id": "user-id", // optional, librarians can specify any user
-  "due_days": 14 // optional, defaults to 14
+  "book_id": "book-id-here",
+  "due_days": 14
 }
 ```
+Librarians can add `"user_id": "someone-else"` to check out books for other people.
 
-#### GET /api/loans
-Get loans (customers see their own, librarians see all).
-Query params: `page`, `limit`, `status`, `user_id`, `overdue`
+**My Loans** - `GET /api/loans`
+See what you've borrowed. Librarians see everyone's loans.
+Use filters: `?status=active&overdue=true&user_id=123`
 
-#### GET /api/loans/:id
-Get loan by ID (customers see their own, librarians see all).
+**Loan Details** - `GET /api/loans/:id`
+Get info about a specific loan.
 
-#### PUT /api/loans/:id/return
-Return a book (customers can return their own, librarians can return any).
+**Return a Book** - `PUT /api/loans/:id/return`
+Mark a book as returned.
 
-#### PUT /api/loans/:id/extend
-Extend loan due date (librarians only).
+**Extend Due Date** - `PUT /api/loans/:id/extend` (librarians only)
 ```json
 {
   "extension_days": 7
 }
 ```
 
-#### DELETE /api/loans/:id
-Delete loan record (librarians only).
+**Remove Loan Record** - `DELETE /api/loans/:id` (librarians only)
 
-#### GET /api/loans/admin/stats
-Get loan statistics (librarians only).
+## Who Can Do What
 
-## 🛡️ Authorization Rules
+**Regular Users (CUSTOMERS):**
+- Browse books and authors
+- Manage their own account
+- Borrow and return books
+- See their own loans
 
-### Role-Based Access Control
+**Librarians:**
+- Everything customers can do
+- Manage all user accounts
+- Add/edit/remove books and authors
+- Handle everyone's loans
+- See usage stats
 
-**CUSTOMER Role:**
-- Can view all books and authors (public endpoints)
-- Can manage their own profile
-- Can borrow books (create loans)
-- Can return their own books
-- Can view their own loans only
+## How the Data Works
 
-**LIBRARIAN Role:**
-- All customer permissions
-- Can manage all users (view, delete)
-- Can manage authors (CRUD operations)
-- Can manage books (CRUD operations)
-- Can manage all loans (view all, extend, delete)
-- Can view admin statistics
-- Can create loans for any user
+The database keeps track of these main things:
 
-### Ownership-Based Access Control
+**Users** - People who use the system (customers and librarians)
+**Authors** - Writers of books
+**Books** - Items in the library collection  
+**Loans** - Records of who borrowed what and when
 
-- Users can only view/modify their own profile
-- Users can only view/return their own loans
-- Librarians can override ownership restrictions
+Books can have multiple authors, and authors can write multiple books. When someone borrows a book, we create a loan record that tracks the due date and return status.
 
-## 🗄️ Database Schema
+## Trying It Out
 
-### User
-- `id` (PK)
-- `name`
-- `email` (unique)
-- `password_hash`
-- `role` (CUSTOMER | LIBRARIAN)
-- Relationships: One-to-many with Loan
+Want to test the API? Here are some quick examples:
 
-### Author
-- `id` (PK)
-- `name`
-- `bio` (optional)
-- Relationships: Many-to-many with Book
-
-### Book
-- `id` (PK)
-- `title`
-- `isbn` (unique)
-- `published_year`
-- `available_copies`
-- Relationships: Many-to-many with Author, One-to-many with Loan
-
-### BookAuthor (Junction Table)
-- `book_id` (FK)
-- `author_id` (FK)
-- Composite primary key
-
-### Loan
-- `id` (PK)
-- `user_id` (FK)
-- `book_id` (FK)
-- `borrowed_at`
-- `due_at`
-- `returned_at` (nullable)
-- Relationships: Many-to-one with User and Book
-
-## 🔒 Security Features
-
-- **Password Hashing:** bcrypt with salt rounds of 12
-- **JWT Authentication:** Secure token-based authentication
-- **Rate Limiting:** API rate limiting to prevent abuse
-- **Input Validation:** Comprehensive input validation
-- **CORS Protection:** Cross-origin request handling
-- **Helmet Security:** Security headers
-- **Role-based Authorization:** Granular access control
-- **Environment Variables:** Secure configuration management
-
-## 📝 Error Handling
-
-The API returns consistent error responses:
-
-```json
-{
-  "error": "Error message",
-  "details": "Additional details if applicable"
-}
-```
-
-Common HTTP status codes:
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `403` - Forbidden
-- `404` - Not Found
-- `409` - Conflict
-- `500` - Internal Server Error
-
-## 🧪 Testing the API
-
-You can test the API using tools like:
-- **Postman** - Import the endpoints
-- **curl** - Command line testing
-- **Thunder Client** - VS Code extension
-- **REST Client** - VS Code extension
-
-### Sample curl commands:
-
+**Log in and get a token:**
 ```bash
-# Login
 curl -X POST http://localhost:3000/api/users/login \
   -H "Content-Type: application/json" \
   -d '{"email":"librarian@library.com","password":"password123"}'
+```
 
-# Get books (using token from login)
-curl -X GET http://localhost:3000/api/books \
-  -H "Authorization: Bearer <your-jwt-token>"
+**See all books:**
+```bash
+curl http://localhost:3000/api/books
+```
 
-# Borrow a book
+**Borrow a book:**
+```bash
 curl -X POST http://localhost:3000/api/loans \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your-jwt-token>" \
-  -d '{"book_id":"book-id-here"}'
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{"book_id":"some-book-id"}'
 ```
+
+You can use Postman, Insomnia, or any HTTP client instead of curl if you prefer a graphical interface.
+
+## When Things Go Wrong
+
+When something goes wrong, you'll get a response like this:
+```json
+{
+  "error": "Email and password are required"
+}
+```
+
+Sometimes with extra details:
+```json
+{
+  "error": "Validation failed",
+  "details": "Password must be at least 6 characters"
+}
+```
+
+Common response codes:
+- `200` - Everything worked
+- `201` - Created something new
+- `400` - You sent bad data
+- `401` - Need to log in
+- `403` - Not allowed to do that
+- `404` - Couldn't find it
+- `409` - Already exists
+- `500` - Server had a problem
+
+## What's Under the Hood
+
+This API uses:
+- **Express.js** for the web framework
+- **Prisma** for database management
+- **JWT** for user authentication
+- **bcrypt** for password hashing
+- **Rate limiting** to prevent abuse
+- **CORS** for cross-origin requests
+- **Helmet** for security headers
+
+The database schema includes proper relationships between users, books, authors, and loans, with foreign key constraints to maintain data integrity.
+
+## Need Help?
+
+If you're having trouble:
+1. Check that the server is running on the right port
+2. Make sure your JWT token isn't expired
+3. Verify you're sending the right data format
+4. Check the console for error messages
+
+For development, the server logs detailed error information to help you debug issues.
