@@ -8,10 +8,23 @@ First things first - let's get this thing running:
 
 ```bash
 npm run dev        # Starts the server on port 3000
-npm run db:seed    # Loads some sample data to play with
+npm run db:seed    # Loads some sample data
 ```
 
 Your API will be live at `http://localhost:3000`
+
+## Interactive Documentation
+
+Check out our Swagger UI for a complete, interactive API documentation where you can test all endpoints:
+
+🚀 **[API Documentation (Swagger UI)](http://localhost:3000/api-docs)**
+
+The Swagger docs include:
+- Complete endpoint descriptions
+- Request/response examples
+- Authentication setup
+- Try-it-yourself functionality
+- Schema definitions
 
 ## Authentication
 

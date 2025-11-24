@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { swaggerUi, specs } = require('./swagger');
 
 // Import routes
 const userRoutes = require('./routes/userRoutes');
@@ -18,8 +19,14 @@ app.use(helmet());
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
-  credentials: true
+  origin: [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    process.env.CLIENT_URL
+  ].filter(Boolean),
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
 // Rate limiting
@@ -53,6 +60,25 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development'
   });
 });
+
+// Swagger API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customSiteTitle: 'Library API Documentation',
+  customfavIcon: '/assets/favicon.ico',
+  swaggerOptions: {
+    docExpansion: 'none',
+    filter: true,
+    showExtensions: true,
+    showCommonExtensions: true,
+    supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+    requestInterceptor: (req) => {
+      req.headers['Accept'] = 'application/json';
+      req.headers['Content-Type'] = 'application/json';
+      return req;
+    }
+  }
+}));
 
 // API routes
 app.use('/api/auth', authLimiter); // Apply stricter rate limiting to auth routes
