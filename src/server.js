@@ -14,6 +14,9 @@ const loanRoutes = require('./routes/loanRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy for accurate IP detection in production
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 
