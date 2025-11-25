@@ -3,9 +3,14 @@
 This is a digital library API utilizing Node.js, Express, Prisma, and PostgreSQL.
 
 ## Live Deployment
-- Live URL: 
-- Swagger URL:
-- Postman Collection: 
+- [Live URL:](https://nbad-library-project.onrender.com)
+- [Swagger URL:](https://nbad-library-project.onrender.com/api-docs)
+- Postman Collection: Postman won't share the enviroment when sharing the collection, but I have uploaded the json files of the collection here.
+- Press import in Postman at the top left, then import the collection url, followed by the enviroment url below.
+- [Collection URL:](https://raw.githubusercontent.com/LoganBuchanan/NBAD-Library-Project/main/Library%20API%20Tests.postman_collection.json)
+- [Enviroment URL:](https://raw.githubusercontent.com/LoganBuchanan/NBAD-Library-Project/main/Library%20API%20-%20Render.postman_environment.json)
+
+
 
 ## Team Members
 - Logan Buchanan        [@LoganBuchanan](https://github.com/LoganBuchanan)
@@ -59,6 +64,11 @@ npx prisma migrate dev
 
 - Testing: Use Postman to test the API. Import the collection linked above.
 - Login: Register at `/api/users/register`, then log in at `/api/users/login` to get your token.
+- A user(Librarian) you can use instead.
+- {
+-   "email": "librarian@library.com",
+-   "password": "password123"
+- }
 - Making Requests: Add your token to request headers: `Authorization: Bearer <your-token>`.
 - View Database: Check `prisma/schema.prisma` for the database structure.
 
