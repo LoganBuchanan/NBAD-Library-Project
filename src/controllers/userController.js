@@ -262,10 +262,7 @@ const getAllUsers = async (req, res) => {
           name: true,
           email: true,
           role: true,
-          createdAt: true,
-          _count: {
-            loans: true
-          }
+          createdAt: true
         },
         skip: parseInt(skip),
         take: parseInt(limit),
