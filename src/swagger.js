@@ -19,12 +19,12 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server'
+        url: 'https://nbad-library-project.onrender.com',
+        description: 'Production server'
       },
       {
-        url: 'https://your-app-name.onrender.com',
-        description: 'Production server'
+        url: 'http://localhost:3000',
+        description: 'Development server'
       }
     ],
     components: {
