@@ -5,8 +5,7 @@ This is a digital library API utilizing Node.js, Express, Prisma, and PostgreSQL
 ## Live Deployment
 - [Live URL:](https://nbad-library-project.onrender.com)
 - [Swagger URL:](https://nbad-library-project.onrender.com/api-docs)
-- Postman Collection: Postman won't share the enviroment when sharing the collection, but I have uploaded the json files of the collection here.
-- Press import in Postman at the top left, then import the collection url, followed by the enviroment url below.
+- [Postman Collection:](https://ltayl106-4582110.postman.co/workspace/Final-Project---Library-Project~bfdc140b-dc10-4b5e-809b-be0e0516fdcb/collection/48577578-e750a456-cdba-4444-b479-7e1140565b3f?action=share&creator=48577578&active-environment=50324992-6958e317-f383-44c3-ae30-36ff2d13414f)
 - [Collection URL:](https://raw.githubusercontent.com/LoganBuchanan/NBAD-Library-Project/main/Library%20API%20Tests.postman_collection.json)
 - [Enviroment URL:](https://raw.githubusercontent.com/LoganBuchanan/NBAD-Library-Project/main/Library%20API%20-%20Render.postman_environment.json)
 
