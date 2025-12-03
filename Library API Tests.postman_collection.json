@@ -60,7 +60,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"currentPassword\": \"\",\n  \"newPassword\": \"\"\n}",
+							"raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newPassword456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -128,7 +128,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"\",\n  \"email\": \"\"\n}",
+							"raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -657,7 +657,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"bookId\": \"\"\n}",
+							"raw": "{\n  \"book_id\": \"cm3o4k8a40002134omlxbqdyi\",\n  \"user_id\": \"cm3o4k8a40000134omlxbqdyi\",\n  \"due_days\": 14\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -784,7 +784,21 @@
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"extension_days\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}loans/:id/extend",
 							"host": [
@@ -909,7 +923,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"role\": \"MEMBER\"\n}",
+							"raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"CUSTOMER\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
