@@ -51,8 +51,22 @@
 								}
 							]
 						},
-						"method": "GET",
-						"header": [],
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currentPassword\": \"\",\n  \"newPassword\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}users/change-password",
 							"host": [
@@ -60,6 +74,33 @@
 							],
 							"path": [
 								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Stats (authenticated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}users/stats",
+							"host": [
+								"{{base_url}}users"
+							],
+							"path": [
+								"stats"
 							]
 						}
 					},
@@ -79,7 +120,21 @@
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"email\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}users/profile",
 							"host": [
@@ -151,14 +206,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
 				}
 			]
 		},
@@ -219,7 +266,21 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"biography\": \"\",\n  \"birthDate\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}authors/",
 							"host": [
@@ -246,7 +307,21 @@
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"biography\": \"\",\n  \"birthDate\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}authors/:id",
 							"host": [
@@ -293,6 +368,23 @@
 									"key": "id",
 									"value": ""
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Popular Authors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}authors/popular",
+							"host": [
+								"{{base_url}}authors"
+							],
+							"path": [
+								"popular"
 							]
 						}
 					},
@@ -379,7 +471,21 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"\",\n  \"authorId\": \"\",\n  \"genre\": \"\",\n  \"isbn\": \"\",\n  \"publishedDate\": \"\",\n  \"totalCopies\": 1,\n  \"availableCopies\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}books/",
 							"host": [
@@ -406,7 +512,21 @@
 							]
 						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"\",\n  \"authorId\": \"\",\n  \"genre\": \"\",\n  \"isbn\": \"\",\n  \"publishedDate\": \"\",\n  \"totalCopies\": 1,\n  \"availableCopies\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}books/:id",
 							"host": [
@@ -452,6 +572,30 @@
 								{
 									"key": "id",
 									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}books/search?query=",
+							"host": [
+								"{{base_url}}books"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "",
+									"description": "Search term for title, author, or genre"
 								}
 							]
 						}
@@ -505,7 +649,21 @@
 							]
 						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bookId\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}loans/",
 							"host": [
@@ -680,6 +838,33 @@
 					"response": []
 				},
 				{
+					"name": "Get Overdue Loans (authenticated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}loans/overdue",
+							"host": [
+								"{{base_url}}loans"
+							],
+							"path": [
+								"overdue"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Loan Stats (admin only)",
 					"request": {
 						"auth": {
@@ -716,7 +901,21 @@
 					"name": "Signup - Create user account",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"email\": \"\",\n  \"password\": \"\",\n  \"role\": \"MEMBER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{base_url}}users/signup",
 							"host": [

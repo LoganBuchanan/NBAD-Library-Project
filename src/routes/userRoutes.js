@@ -6,7 +6,8 @@ const {
   updateProfile, 
   changePassword, 
   getAllUsers, 
-  deleteUser 
+  deleteUser,
+  getUserStats 
 } = require('../controllers/userController');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
@@ -239,5 +240,44 @@ router.get('/', authenticateToken, requireRole('LIBRARIAN'), getAllUsers);
  *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/:id', authenticateToken, requireRole('LIBRARIAN'), deleteUser);
+
+/**
+ * @swagger
+ * /api/users/stats:
+ *   get:
+ *     summary: Get user statistics and activity
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Get current user's loan statistics and activity summary
+ *     responses:
+ *       200:
+ *         description: User statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *                 stats:
+ *                   type: object
+ *                   properties:
+ *                     activeLoans:
+ *                       type: integer
+ *                       example: 3
+ *                     loanHistory:
+ *                       type: integer
+ *                       example: 15
+ *                     overdueLoans:
+ *                       type: integer
+ *                       example: 1
+ *                     totalLoans:
+ *                       type: integer
+ *                       example: 18
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ */
+router.get('/stats', authenticateToken, getUserStats);
 
 module.exports = router;

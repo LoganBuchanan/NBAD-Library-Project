@@ -6,7 +6,8 @@ const {
   returnBook, 
   extendLoan, 
   deleteLoan, 
-  getLoanStats 
+  getLoanStats,
+  getOverdueLoans 
 } = require('../controllers/loanController');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
@@ -74,6 +75,72 @@ router.post('/', authenticateToken, createLoan);
  *         $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', authenticateToken, getAllLoans);
+
+/**
+ * @swagger
+ * /api/loans/admin/stats:
+ *   get:
+ *     summary: Get loan statistics (Librarian only)
+ *     tags: [Loans]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Loan statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalLoans:
+ *                   type: integer
+ *                 activeLoans:
+ *                   type: integer
+ *                 overdueLoans:
+ *                   type: integer
+ *                 returnedLoans:
+ *                   type: integer
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getLoanStats);
+
+/**
+ * @swagger
+ * /api/loans/overdue:
+ *   get:
+ *     summary: Get overdue loans
+ *     tags: [Loans]
+ *     security:
+ *       - bearerAuth: []
+ *     description: Get overdue loans (all for librarians, own for customers)
+ *     responses:
+ *       200:
+ *         description: Overdue loans retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 loans:
+ *                   type: array
+ *                   items:
+ *                     allOf:
+ *                       - $ref: '#/components/schemas/Loan'
+ *                       - type: object
+ *                         properties:
+ *                           daysOverdue:
+ *                             type: integer
+ *                             example: 5
+ *                 totalOverdue:
+ *                   type: integer
+ *                   example: 3
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ */
+router.get('/overdue', authenticateToken, getOverdueLoans);
 
 /**
  * @swagger
@@ -203,36 +270,5 @@ router.put('/:id/extend', authenticateToken, requireRole('LIBRARIAN'), extendLoa
  *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/:id', authenticateToken, requireRole('LIBRARIAN'), deleteLoan);
-
-/**
- * @swagger
- * /api/loans/admin/stats:
- *   get:
- *     summary: Get loan statistics (Librarian only)
- *     tags: [Loans]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Loan statistics
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalLoans:
- *                   type: integer
- *                 activeLoans:
- *                   type: integer
- *                 overdueLoans:
- *                   type: integer
- *                 returnedLoans:
- *                   type: integer
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       403:
- *         $ref: '#/components/responses/ForbiddenError'
- */
-router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getLoanStats);
 
 module.exports = router;

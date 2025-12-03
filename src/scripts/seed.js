@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    console.log('🌱 Starting database seed...');
+    console.log('Starting database seed...');
 
     // Clear existing data
     await prisma.loan.deleteMany();
@@ -15,7 +15,7 @@ async function main() {
     await prisma.author.deleteMany();
     await prisma.user.deleteMany();
 
-    console.log('🗑️  Cleared existing data');
+    console.log(' Cleared existing data');
 
     // Create users
     const hashedPassword = await bcrypt.hash('password123', 12);
@@ -47,7 +47,26 @@ async function main() {
       }
     });
 
-    console.log('👥 Created users');
+    // Test users for demo purposes
+    const testCustomer1 = await prisma.user.create({
+      data: {
+        name: 'Demo User',
+        email: 'demo@test.com',
+        password_hash: hashedPassword,
+        role: 'CUSTOMER'
+      }
+    });
+
+    const testCustomer2 = await prisma.user.create({
+      data: {
+        name: 'Test Student',
+        email: 'student@test.com',
+        password_hash: hashedPassword,
+        role: 'CUSTOMER'
+      }
+    });
+
+    console.log('Created users');
 
     // Create authors
     const author1 = await prisma.author.create({
@@ -78,7 +97,22 @@ async function main() {
       }
     });
 
-    console.log('✍️  Created authors');
+    // Test authors for demo purposes
+    const author5 = await prisma.author.create({
+      data: {
+        name: 'Agatha Christie',
+        bio: 'English writer known for her detective novels featuring Hercule Poirot and Miss Marple.'
+      }
+    });
+
+    const author6 = await prisma.author.create({
+      data: {
+        name: 'Douglas Adams',
+        bio: 'English author and humorist, best known for The Hitchhiker\'s Guide to the Galaxy.'
+      }
+    });
+
+    console.log(' Created authors');
 
     // Create books
     const book1 = await prisma.book.create({
@@ -126,7 +160,35 @@ async function main() {
       }
     });
 
-    console.log('📚 Created books');
+    // Test books for demo purposes
+    const book6 = await prisma.book.create({
+      data: {
+        title: 'Murder on the Orient Express',
+        isbn: '9780062693662',
+        published_year: 1934,
+        available_copies: 2
+      }
+    });
+
+    const book7 = await prisma.book.create({
+      data: {
+        title: 'The Hitchhiker\'s Guide to the Galaxy',
+        isbn: '9780345391803',
+        published_year: 1979,
+        available_copies: 4
+      }
+    });
+
+    const book8 = await prisma.book.create({
+      data: {
+        title: 'Node.js Complete Guide',
+        isbn: '9781234567890',
+        published_year: 2023,
+        available_copies: 5
+      }
+    });
+
+    console.log('Created books');
 
     // Create book-author relationships
     await prisma.bookAuthor.createMany({
@@ -135,11 +197,14 @@ async function main() {
         { book_id: book2.id, author_id: author2.id },
         { book_id: book3.id, author_id: author3.id },
         { book_id: book4.id, author_id: author4.id },
-        { book_id: book5.id, author_id: author2.id }
+        { book_id: book5.id, author_id: author2.id },
+        { book_id: book6.id, author_id: author5.id },
+        { book_id: book7.id, author_id: author6.id },
+        { book_id: book8.id, author_id: author6.id }
       ]
     });
 
-    console.log('🔗 Created book-author relationships');
+    console.log('Created book-author relationships');
 
     // Create some loans
     const dueDate = new Date();
@@ -159,16 +224,16 @@ async function main() {
       data: { available_copies: 2 }
     });
 
-    console.log('📖 Created loans');
+    console.log('Created loans');
 
-    console.log('✅ Database seeded successfully!');
-    console.log('\n🔐 Test credentials:');
+    console.log('Database seeded successfully!');
+    console.log('\nTest credentials:');
     console.log('Librarian: librarian@library.com / password123');
     console.log('Customer 1: john@example.com / password123');
     console.log('Customer 2: sarah@example.com / password123');
 
   } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    console.error('Error seeding database:', error);
     throw error;
   } finally {
     await prisma.$disconnect();

@@ -551,6 +551,60 @@ const getLoanStats = async (req, res) => {
   }
 };
 
+// Get overdue loans for librarians or user's own overdue loans
+const getOverdueLoans = async (req, res) => {
+  try {
+    const { role, id: userId } = req.user;
+    
+    const whereClause = {
+      returned_at: null,
+      due_at: { lt: new Date() }
+    };
+
+    // If not a librarian, only show user's own overdue loans
+    if (role !== 'LIBRARIAN') {
+      whereClause.user_id = userId;
+    }
+
+    const overdueLoans = await prisma.loan.findMany({
+      where: whereClause,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        book: {
+          select: {
+            id: true,
+            title: true,
+            isbn: true
+          }
+        }
+      },
+      orderBy: { due_at: 'asc' }
+    });
+
+    const formattedLoans = overdueLoans.map(loan => {
+      const daysOverdue = Math.floor((new Date() - new Date(loan.due_at)) / (1000 * 60 * 60 * 24));
+      return {
+        ...loan,
+        daysOverdue
+      };
+    });
+
+    res.json({
+      loans: formattedLoans,
+      totalOverdue: formattedLoans.length
+    });
+  } catch (error) {
+    console.error('Get overdue loans error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createLoan,
   getAllLoans,
@@ -558,5 +612,6 @@ module.exports = {
   returnBook,
   extendLoan,
   deleteLoan,
-  getLoanStats
+  getLoanStats,
+  getOverdueLoans
 };

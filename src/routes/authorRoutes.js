@@ -5,7 +5,8 @@ const {
   getAuthorById, 
   updateAuthor, 
   deleteAuthor, 
-  getAuthorStats 
+  getAuthorStats,
+  getPopularAuthors 
 } = require('../controllers/authorController');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
@@ -28,6 +29,80 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Author'
  */
 router.get('/', getAllAuthors);
+
+/**
+ * @swagger
+ * /api/authors/popular:
+ *   get:
+ *     summary: Get popular authors based on book loans
+ *     tags: [Authors]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Maximum number of authors to return
+ *     responses:
+ *       200:
+ *         description: Popular authors with loan statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 authors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       bio:
+ *                         type: string
+ *                       totalBooks:
+ *                         type: integer
+ *                       totalLoans:
+ *                         type: integer
+ *                       popularity:
+ *                         type: number
+ *                       bookTitles:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                 total:
+ *                   type: integer
+ */
+router.get('/popular', getPopularAuthors);
+
+/**
+ * @swagger
+ * /api/authors/admin/stats:
+ *   get:
+ *     summary: Get author statistics (Librarian only)
+ *     tags: [Authors]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Author statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalAuthors:
+ *                   type: integer
+ *                 authorsWithBooks:
+ *                   type: integer
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getAuthorStats);
 
 /**
  * @swagger
@@ -152,32 +227,5 @@ router.put('/:id', authenticateToken, requireRole('LIBRARIAN'), updateAuthor);
  *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/:id', authenticateToken, requireRole('LIBRARIAN'), deleteAuthor);
-
-/**
- * @swagger
- * /api/authors/admin/stats:
- *   get:
- *     summary: Get author statistics (Librarian only)
- *     tags: [Authors]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Author statistics
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalAuthors:
- *                   type: integer
- *                 authorsWithBooks:
- *                   type: integer
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       403:
- *         $ref: '#/components/responses/ForbiddenError'
- */
-router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getAuthorStats);
 
 module.exports = router;

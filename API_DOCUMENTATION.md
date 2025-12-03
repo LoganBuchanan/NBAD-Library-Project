@@ -17,7 +17,7 @@ Your API will be live at `http://localhost:3000`
 
 Check out our Swagger UI for a complete, interactive API documentation where you can test all endpoints:
 
-🚀 **[API Documentation (Swagger UI)](http://localhost:3000/api-docs)**
+**[API Documentation (Swagger UI)](http://localhost:3000/api-docs)**
 
 The Swagger docs include:
 - Complete endpoint descriptions

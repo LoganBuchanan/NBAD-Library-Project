@@ -59,7 +59,7 @@ const signup = async (req, res) => {
         name: true,
         email: true,
         role: true,
-        createdAt: true
+        created_at: true
       }
     });
 
@@ -138,8 +138,8 @@ const getProfile = async (req, res) => {
         name: true,
         email: true,
         role: true,
-        createdAt: true,
-        updatedAt: true
+        created_at: true,
+        updated_at: true
       }
     });
 
@@ -183,7 +183,7 @@ const updateProfile = async (req, res) => {
         name: true,
         email: true,
         role: true,
-        updatedAt: true
+        updated_at: true
       }
     });
 
@@ -319,6 +319,59 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// Get user statistics and activity summary
+const getUserStats = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    const [userProfile, activeLoans, loanHistory] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          createdAt: true
+        }
+      }),
+      prisma.loan.count({
+        where: {
+          user_id: userId,
+          returned_at: null
+        }
+      }),
+      prisma.loan.count({
+        where: {
+          user_id: userId,
+          returned_at: { not: null }
+        }
+      })
+    ]);
+
+    const overdueLoans = await prisma.loan.count({
+      where: {
+        user_id: userId,
+        returned_at: null,
+        due_at: { lt: new Date() }
+      }
+    });
+
+    res.json({
+      user: userProfile,
+      stats: {
+        activeLoans,
+        loanHistory,
+        overdueLoans,
+        totalLoans: activeLoans + loanHistory
+      }
+    });
+  } catch (error) {
+    console.error('Get user stats error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -326,5 +379,6 @@ module.exports = {
   updateProfile,
   changePassword,
   getAllUsers,
-  deleteUser
+  deleteUser,
+  getUserStats
 };

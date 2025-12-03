@@ -185,7 +185,7 @@ process.on('SIGINT', () => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📚 Library Management System API v1.0.0`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Library Management System API v1.0.0`);
 });

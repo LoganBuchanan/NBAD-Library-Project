@@ -268,11 +268,64 @@ const getAuthorStats = async (req, res) => {
   }
 };
 
+// Get popular authors based on book loans
+const getPopularAuthors = async (req, res) => {
+  try {
+    const { limit = 10 } = req.query;
+    
+    const authors = await prisma.author.findMany({
+      include: {
+        bookAuthors: {
+          include: {
+            book: {
+              include: {
+                loans: {
+                  where: {
+                    returned_at: { not: null }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      take: parseInt(limit)
+    });
+
+    const popularAuthors = authors.map(author => {
+      const totalLoans = author.bookAuthors.reduce((total, bookAuthor) => {
+        return total + bookAuthor.book.loans.length;
+      }, 0);
+      
+      const bookTitles = author.bookAuthors.map(ba => ba.book.title);
+      
+      return {
+        id: author.id,
+        name: author.name,
+        bio: author.bio,
+        totalBooks: author.bookAuthors.length,
+        totalLoans,
+        popularity: totalLoans / Math.max(author.bookAuthors.length, 1),
+        bookTitles
+      };
+    }).sort((a, b) => b.totalLoans - a.totalLoans);
+
+    res.json({
+      authors: popularAuthors,
+      total: popularAuthors.length
+    });
+  } catch (error) {
+    console.error('Get popular authors error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createAuthor,
   getAllAuthors,
   getAuthorById,
   updateAuthor,
   deleteAuthor,
-  getAuthorStats
+  getAuthorStats,
+  getPopularAuthors
 };

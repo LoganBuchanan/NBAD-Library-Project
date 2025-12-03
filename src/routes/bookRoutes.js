@@ -5,7 +5,8 @@ const {
   getBookById, 
   updateBook, 
   deleteBook, 
-  getBookStats 
+  getBookStats,
+  searchBooks 
 } = require('../controllers/bookController');
 const { authenticateToken, requireRole } = require('../middleware/auth');
 
@@ -44,6 +45,96 @@ const router = express.Router();
  *                 $ref: '#/components/schemas/Book'
  */
 router.get('/', getAllBooks);
+
+/**
+ * @swagger
+ * /api/books/search:
+ *   get:
+ *     summary: Advanced book search with filters
+ *     tags: [Books]
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         schema:
+ *           type: string
+ *         description: Search in title or ISBN
+ *       - in: query
+ *         name: author
+ *         schema:
+ *           type: string
+ *         description: Filter by author name
+ *       - in: query
+ *         name: available
+ *         schema:
+ *           type: boolean
+ *         description: Filter by availability
+ *       - in: query
+ *         name: year
+ *         schema:
+ *           type: integer
+ *         description: Filter by publication year
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Maximum number of results
+ *     responses:
+ *       200:
+ *         description: Search results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 books:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Book'
+ *                 total:
+ *                   type: integer
+ *                 filters:
+ *                   type: object
+ */
+router.get('/search', searchBooks);
+
+/**
+ * @swagger
+ * /api/books/admin/stats:
+ *   get:
+ *     summary: Get book statistics (Librarian only)
+ *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Book statistics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalBooks:
+ *                   type: integer
+ *                 availableBooks:
+ *                   type: integer
+ *                 borrowedBooks:
+ *                   type: integer
+ *                 popularBooks:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       borrowCount:
+ *                         type: integer
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenError'
+ */
+router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getBookStats);
 
 /**
  * @swagger
@@ -196,43 +287,5 @@ router.put('/:id', authenticateToken, requireRole('LIBRARIAN'), updateBook);
  *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/:id', authenticateToken, requireRole('LIBRARIAN'), deleteBook);
-
-/**
- * @swagger
- * /api/books/admin/stats:
- *   get:
- *     summary: Get book statistics (Librarian only)
- *     tags: [Books]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Book statistics
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 totalBooks:
- *                   type: integer
- *                 availableBooks:
- *                   type: integer
- *                 borrowedBooks:
- *                   type: integer
- *                 popularBooks:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       title:
- *                         type: string
- *                       borrowCount:
- *                         type: integer
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       403:
- *         $ref: '#/components/responses/ForbiddenError'
- */
-router.get('/admin/stats', authenticateToken, requireRole('LIBRARIAN'), getBookStats);
 
 module.exports = router;

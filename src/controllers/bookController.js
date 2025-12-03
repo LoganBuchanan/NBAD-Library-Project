@@ -436,11 +436,143 @@ const getBookStats = async (req, res) => {
   }
 };
 
+// Create test book for demo purposes
+const createTestBook = async (req, res) => {
+  try {
+    // First, get any available author to link to
+    const authors = await prisma.author.findMany({
+      take: 1
+    });
+
+    if (authors.length === 0) {
+      return res.status(400).json({ error: 'No authors available. Create an author first.' });
+    }
+
+    const testBook = await prisma.book.create({
+      data: {
+        title: `Test Book ${Date.now()}`,
+        isbn: `978${Math.floor(Math.random() * 1000000000)}`,
+        published_year: 2024,
+        available_copies: 3,
+        bookAuthors: {
+          create: {
+            author_id: authors[0].id
+          }
+        }
+      },
+      include: {
+        bookAuthors: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const response = {
+      ...testBook,
+      authors: testBook.bookAuthors.map(ba => ba.author),
+      bookAuthors: undefined
+    };
+
+    res.status(201).json({
+      message: 'Test book created successfully',
+      book: response
+    });
+  } catch (error) {
+    console.error('Create test book error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Advanced book search with filters
+const searchBooks = async (req, res) => {
+  try {
+    const { query, author, available, year, limit = 10 } = req.query;
+    
+    const filters = {
+      AND: []
+    };
+
+    // Search in title or ISBN
+    if (query) {
+      filters.AND.push({
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { isbn: { contains: query } }
+        ]
+      });
+    }
+
+    // Filter by availability
+    if (available === 'true') {
+      filters.AND.push({ available_copies: { gt: 0 } });
+    }
+
+    // Filter by publication year
+    if (year) {
+      filters.AND.push({ published_year: parseInt(year) });
+    }
+
+    // Filter by author name
+    if (author) {
+      filters.AND.push({
+        bookAuthors: {
+          some: {
+            author: {
+              name: { contains: author, mode: 'insensitive' }
+            }
+          }
+        }
+      });
+    }
+
+    const books = await prisma.book.findMany({
+      where: filters.AND.length > 0 ? filters : {},
+      include: {
+        bookAuthors: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      },
+      take: parseInt(limit),
+      orderBy: { title: 'asc' }
+    });
+
+    const formattedBooks = books.map(book => ({
+      ...book,
+      authors: book.bookAuthors.map(ba => ba.author),
+      bookAuthors: undefined
+    }));
+
+    res.json({
+      books: formattedBooks,
+      total: formattedBooks.length,
+      filters: { query, author, available, year }
+    });
+  } catch (error) {
+    console.error('Search books error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   createBook,
   getAllBooks,
   getBookById,
   updateBook,
   deleteBook,
-  getBookStats
+  getBookStats,
+  searchBooks
 };
